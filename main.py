@@ -1,4 +1,5 @@
-import PIL.Image
+import sys
+from PIL import Image
 
 #Symbols for out conver
 ASCII_CHARS = ["@", "#", "S", "%", "?", "*", "+", ";", ":", ",", "."]
@@ -13,27 +14,30 @@ def resize_image(image, new_width=200): # If new_width bigger than 160 it will l
 
 def grayify(image):
     grayscale_image = image.convert("L")
-    return(grayscale_image)
+    return grayscale_image
 
 def pixels_to_ascii(image):
     pixels = image.getdata()
     characters = "".join([ASCII_CHARS[pixel//25] for pixel in pixels])
     return characters
 
-def main(new_width=200): #if new_width bigger than 160 it will look more better
-    path = input("Enter a valid pathname to an image: ")
+def main(new_width=200):
     try:
-        image = PIL.Image.open(path)
-    except:
-        print(path, "Is not valid pathname, try find out errro in your path")
-    
+        path = input("Enter a valid pathname to an image: ")
+        image = Image.open(path)
+    except Exception as e:
+        print(f"Error: {e}")
+        print("Please ensure the path is correct and points to a valid image file.")
+        return
+
     new_image = pixels_to_ascii(grayify(resize_image(image)))
     pixel_count = len(new_image)
     ascii_image = "\n".join(new_image[i:(i+new_width)] for i in range(0, pixel_count, new_width))
-    
+
     print(ascii_image)
 
     with open("ascii_image.txt", "w") as file:
         file.write(ascii_image)
 
-main()
+if __name__ == "__main__":
+    main()
