@@ -1,4 +1,4 @@
-import sys
+import os
 from PIL import Image
 
 #Symbols for out conver
@@ -34,10 +34,15 @@ def main(new_width=200):
     pixel_count = len(new_image)
     ascii_image = "\n".join(new_image[i:(i+new_width)] for i in range(0, pixel_count, new_width))
 
+    base_filename = os.path.splitext(os.path.basename(path))[0]
+    output_filename = f"{base_filename}.txt"
+
     print(ascii_image)
 
-    with open("ascii_image.txt", "w") as file:
+    with open(output_filename, "w") as file:
         file.write(ascii_image)
+    
+    print(f"ASCII art saved to {output_filename}")
 
 if __name__ == "__main__":
     main()
